@@ -2,10 +2,10 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: finance-deployment
-  labels:                  # Fixed alignment
-    app: finance          # Indentation corrected
+  labels:
+    app: finance
 spec:
-  replicas: 1              # Number of pod replicas
+  replicas: 1  # Number of pod replicas
   selector:
     matchLabels:
       app: finance
@@ -15,12 +15,13 @@ spec:
         app: finance
     spec:
       containers:
-      - name: finance-app
-        image:  krishnaobbu/finance:1.0  # Replace with your app image
-        ports:
-        - containerPort: 8084            # Application's listening port
+        - name: finance-app
+          image: krishnaobbu/finance:1.0  # Replace with your app image
+          ports:
+            - containerPort: 8084  # Application's listening port
+
 ---
-# Node Port Service
+# NodePort Service
 apiVersion: v1
 kind: Service
 metadata:
@@ -28,5 +29,11 @@ metadata:
   labels:
     app: finance
 spec:
+  type: NodePort  # Added service type (can be ClusterIP, NodePort, or LoadBalancer)
   selector:
-    app: finance          # Must match the label in the Deployment
+    app: finance  # Must match the label in the Deployment
+  ports:
+    - protocol: TCP
+      port: 80       # External port
+      targetPort: 8084  # The port the app inside the pod is listening on
+      nodePort: 30084   # NodePort (Optional, within range 30000-32767)
