@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finance-deployment
+  labels:                  # Fixed alignment
+    app: finance          # Indentation corrected
+spec:
+  replicas: 1              # Number of pod replicas
+  selector:
+    matchLabels:
+      app: finance
+  template:
+    metadata:
+      labels:
+        app: finance
+    spec:
+      containers:
+      - name: finance-app
+        image:  krishnaobbu/finance:1.0  # Replace with your app image
+        ports:
+        - containerPort: 8084            # Application's listening port
+---
+# Node Port Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: medicure-service
+  labels:
+    app: finance
+spec:
+  selector:
+    app: finance          # Must match the label in the Deployment
